@@ -1,0 +1,49 @@
+enable
+configure terminal
+hostname RT-02
+banner motd "ACESSO APENAS PARA O DEPARTAMENTO DE TI"
+enable secret SenhadaEnable
+ip domain-name rede3.local
+crypto key generate rsa general-keys modulus 1024
+line vty 0 15
+password SenhadaVTY
+login
+transport input ssh
+exec-timeout 5
+exit
+username administrador privilege 15 secret SenhaAdmin
+username Estagiario privilege 1 secret SenhaEst
+login block-for 180 attempts 3 within 60
+security passwords min-length 8
+line console 0 
+password SenhadaConsole 
+login
+exit
+service password-encryption
+interface gigabitEthernet 0/0
+ip add 192.168.0.1 255.255.255.128
+description REDE 192.168.0.0/25
+no shutdown
+exit
+interface serial 0/0/0
+ip address 200.200.100.6 255.255.255.252
+description REDE 200.200.100.4/30
+no shutdown 
+exit
+interface serial 0/0/1
+ip address 200.200.100.9 255.255.255.252
+description REDE 200.200.100.8/30
+no shutdown 
+exit
+ip route 192.168.1.0 255.255.255.224 200.200.100.5
+ip route 192.168.1.0 255.255.255.224 200.200.100.10
+ip route 172.16.42.0 255.255.254.0 200.200.100.5
+ip route 172.16.42.0 255.255.254.0 200.200.100.10
+ip route 10.40.16.0 255.255.240.0 200.200.100.5
+ip route 10.40.16.0 255.255.240.0 200.200.100.10
+ip route 200.200.100.0 255.255.255.252 200.200.100.5
+ip route 200.200.100.0 255.255.255.252 200.200.100.10
+ip route 200.200.100.12 255.255.255.252 200.200.100.5
+ip route 200.200.100.12 255.255.255.252 255.255.255.100.10
+do wr
+  
